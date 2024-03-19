@@ -1,5 +1,5 @@
 const knex = require('knex');
-
+//---------------------------------------------------------------------------------------------------------------------------------------------------//
 class ClienteSQLusuarios {
 
     constructor(options) {
@@ -35,7 +35,7 @@ class ClienteSQLusuarios {
     }
 }
 
-
+//---------------------------------------------------------------------------------------------------------------------------------------------------//
 
 class ClienteSQLboxes {
 
@@ -63,17 +63,46 @@ class ClienteSQLboxes {
         return this.knex('boxes').select('*')
     }
     listarBoxesArea(dataBox) {
-        return this.knex('boxes').where({ tipoBox: dataBox})
+        return this.knex('boxes').where({ tipoBox: dataBox}).where({estado: 0})
     }
     listarBoxId(num) {
-        return this.knex('boxes').where({ idBox: num})
+        return this.knex('boxes').where({ idBox: num});
     }
 
+    cerrarBoxEstado(num) {
+        return this.knex('boxes').where({ idBox: num}).update({estado: 0});
+    }
+    seleccionarBoxEstado(num) {
+        return this.knex('boxes').where({ idBox: num}).update({estado: 1});
+    }
+    abrirBoxEstado(num) {
+        return this.knex('boxes').where({ idBox: num}).update({estado: 2});
+    }
     close() {
         this.knex.destroy()
     }
 }
 //-------------------------------------------------------------------------------------------------------//
 
+class ClienteSQLturnos {
 
-module.exports = {ClienteSQLusuarios, ClienteSQLboxes}
+    constructor(options) {
+        this.knex = knex(options)
+    }
+    
+    listarTipoDeTurno() {
+        return this.knex('tipoDeTurno').select('*')
+    }
+
+    insertarTurno(turno) {
+        return this.knex('turnos').insert(turno)
+    }
+
+    close() {
+        this.knex.destroy()
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------//
+
+module.exports = {ClienteSQLusuarios, ClienteSQLboxes, ClienteSQLturnos}
